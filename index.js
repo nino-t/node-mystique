@@ -1,4 +1,5 @@
-const tpl = require('@supersoccer/template')
+const Misty = require('../misty')
+const tpl = Misty.Template
 
 const DATATYPES = [
   {
@@ -24,15 +25,18 @@ class Mystique {
   }
 
   render (req, res, next) {
-    res.mystique = (data) => {
+    res.mystique = (view, data) => {
+      view = view || 'mystique'
       data = this.meta(data)
-      res.marko(tpl.load('mystique'), { dataset: data })
+      res.marko(tpl.load(view), { dataset: data })
     }
     next()
   }
 
   meta (dataset) {
     let resources = []
+
+    console.log(dataset)
 
     for (let resource of dataset.data) {
       let _resource = []
