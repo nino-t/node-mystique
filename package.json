@@ -1,11 +1,11 @@
 {
   "name": "@supersoccer/mystique",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "main": "index.js",
   "repository": "https://github.com/supersoccer/node-mystique",
   "author": "hkyo89 <hkyo89@yahoo.co.jp>",
   "license": "MIT",
   "dependencies": {
-    "@supersoccer/template": "^1.0.0"
+    "@supersoccer/misty": "^1.0.1"
   }
 }
