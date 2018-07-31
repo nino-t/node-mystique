@@ -1,6 +1,8 @@
-const Misty = require('../misty')
-const tpl = Misty.Template
+const { Path } = require('@supersoccer/misty')
 
+/**
+ * @constant
+ */
 const DATATYPES = [
   {
     name: 'number',
@@ -19,24 +21,39 @@ const DATATYPES = [
   }
 ]
 
+/**
+ * This class is a wrapper of Marko with preprocessed data to be integrated with Misty
+ */
 class Mystique {
-  constructor (template) {
+  constructor () {
     this.render = this.render.bind(this)
+  }
+
+  /**
+   * Load marko template file
+   * @param {string} filepath - Marko template filename inside `containers` directory, 
+   * including subdirectories if exist 
+   * @static
+   * @example
+   * const tpl = Mystique.load('accounts/login')
+   * // This will load `<APP_ROOT>/containers/accounts/login.marko` to `tpl`
+   */
+  static load (filepath) {
+    filepath = `${filepath.replace(/\.marko$/, '')}.marko`
+    return require(Path.basepath.containers(filepath))
   }
 
   render (req, res, next) {
     res.mystique = (view, data) => {
       view = view || 'mystique'
       data = this.meta(data)
-      res.marko(tpl.load(view), { dataset: data })
+      res.marko(Mystique.load(view), { dataset: data })
     }
     next()
   }
 
   meta (dataset) {
     let resources = []
-
-    console.log(dataset)
 
     for (let resource of dataset.data) {
       let _resource = []
@@ -60,7 +77,7 @@ class Mystique {
     }
 
     dataset.data = resources
-    console.log(dataset.data)
+    
     return dataset
   }
 

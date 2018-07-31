@@ -5,7 +5,14 @@
   "repository": "https://github.com/supersoccer/node-mystique",
   "author": "hkyo89 <hkyo89@yahoo.co.jp>",
   "license": "MIT",
+  "scripts": {
+    "doc": "jsdoc -c jsdoc.json"
+  },
   "dependencies": {
-    "@supersoccer/misty": "^1.0.1"
+    "@supersoccer/misty": "*"
+  },
+  "devDependencies": {
+    "@supersoccer/minako": "^1.0.0",
+    "jsdoc": "^3.5.5"
   }
 }
