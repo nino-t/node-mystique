@@ -1,4 +1,6 @@
-const { Path } = require('@supersoccer/misty')
+const { Config, Utils } = require('@supersoccer/misty')
+const { Path } = Utils
+const chokidar = require('chokidar')
 
 /**
  * @constant
@@ -31,8 +33,8 @@ class Mystique {
 
   /**
    * Load marko template file
-   * @param {string} filepath - Marko template filename inside `containers` directory, 
-   * including subdirectories if exist 
+   * @param {string} filepath - Marko template filename inside `containers` directory,
+   * including subdirectories if exist
    * @static
    * @example
    * const tpl = Mystique.load('accounts/login')
@@ -41,6 +43,34 @@ class Mystique {
   static load (filepath) {
     filepath = `${filepath.replace(/\.marko$/, '')}.marko`
     return require(Path.basepath.containers(filepath))
+  }
+
+  static fieldTitle (fieldName) {
+    const titles = fieldName.split('_')
+    const _tmp = []
+
+    for (let title of titles) {
+      if (title === 'id') {
+        title = 'ID'
+      }
+
+      title = title[0].toLocaleUpperCase() + title.slice(1)
+      _tmp.push(title)
+    }
+
+    return _tmp.join(' ')
+  }
+
+  static parseVar (context, text) {
+    const match = text.match(/(\$\{([^${}]+)\})+/gi)
+
+    if (match) {
+      match.map((val) => {
+        text = text.replace(val, context[val.slice(2, -1)])
+      })
+    }
+
+    return text
   }
 
   render (req, res, next) {
@@ -124,6 +154,25 @@ class Mystique {
   length (name) {
     return name.replace(/[^0-9]+/g, '') || 0
   }
+
+  static watch () {
+    if (Config.isDev) {
+      const prefix = '[mystique]'
+      console.log(`${prefix} watching`)
+      const watchDir = Path.resolve('./**/*.marko')
+      const watcher = chokidar.watch(watchDir)
+      watcher.on('ready', () => {
+        watcher.on('all', (event, path) => {
+          Object.keys(require.cache).forEach((id) => {
+            if (id.indexOf('marko') >= 0) {
+              delete require.cache[id]
+            }
+          })
+          console.log(`${prefix} cache cleared`)
+        })
+      })
+    }
+  }
 }
 
-module.exports = new Mystique()
+module.exports = Mystique
