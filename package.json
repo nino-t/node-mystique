@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@supersoccer/misty": "*",
+    "@supersoccer/misty-loader": "*",
     "chokidar": "^2.0.4"
   },
   "devDependencies": {

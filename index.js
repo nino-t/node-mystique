@@ -1,4 +1,4 @@
-const { Config, Utils } = require('@supersoccer/misty')
+const { Config, Utils } = require('@supersoccer/misty-loader')
 const { Path } = Utils
 const chokidar = require('chokidar')
 
